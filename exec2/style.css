@@ -1,0 +1,209 @@
+/* ==========================================================================
+   Configurações Globais e Reset Totalmente Responsivo
+   ========================================================================== */
+:root {
+    --primary-color: #007bff; /* Call to Action */
+    --primary-hover: #0056b3;
+    --text-color: #333;
+    --bg-color: #f4f7f6;
+    --card-bg: #ffffff;
+    --border-color: #ccc;
+    
+    /* Font-size fluído baseado na largura da viewport */
+    font-size: calc(14px + 0.5vw);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    /* Usando vh para garantir preenchimento total da altura */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Padding responsivo com vmin */
+    padding: 5vmin;
+}
+
+.main-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* ==========================================================================
+   Container de Login (Card) - Responsividade Fluida
+   ========================================================================== */
+.login-box {
+    background: var(--card-bg);
+    /* Largura fluida: 90% da viewport em mobile, máx de 400px em desktop */
+    width: 90vw;
+    max-width: 400px;
+    
+    /* Padding responsivo adaptável */
+    padding: calc(1rem + 3vmin); 
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.login-header {
+    text-align: center;
+    /* Margem fluida */
+    margin-bottom: 5vh;
+}
+
+.login-header h1 {
+    font-size: 1.8rem; /* Relativo ao root fluid font-size */
+    margin-bottom: 1vh;
+}
+
+.login-header p {
+    font-size: 0.95rem;
+    color: #666;
+}
+
+/* ==========================================================================
+   Formulário e Acessibilidade (Foco)
+   ========================================================================== */
+.form-group {
+    /* Espaçamento fluído */
+    margin-bottom: 3vh;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.8vh;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+input {
+    width: 100%; /* Ocupa tudo dentro do card */
+    /* Padding responsivo proporcional à altura da tela */
+    padding: 1.5vh 1rem; 
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+/* FOCO EM ACESSIBILIDADE: Estado de focus visível e claro */
+input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    /* Destaque visual robusto */
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.form-actions {
+    margin-bottom: 4vh;
+    text-align: right;
+}
+
+.link-secondary {
+    font-size: 0.85rem;
+    color: var(--primary-hover);
+    text-decoration: none;
+}
+
+.link-secondary:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   Botão Principal (CTA) e Aviso de Envio Visual
+   ========================================================================== */
+.submit-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.btn-primary {
+    /* HIERARQUIA VISUAL E MOBILE FIRST:
+       Width: 100% por padrão (mobile), ocupando toda largura facilitando clique. */
+    width: 100%;
+    
+    /* Altura responsiva usando vh */
+    height: 6vh; 
+    min-height: 44px; /* Acessibilidade: tamanho mínimo de toque */
+    
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    
+    /* Para centralizar conteúdo interno se necessário */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+/* FOCO EM ACESSIBILIDADE NO BOTÃO */
+.btn-primary:focus {
+    outline: none;
+    /* Outline robusto para navegação por teclado */
+    box-shadow: 0 0 0 4px rgba(0, 64, 133, 0.5);
+}
+
+/* AVISO VISUAL PURO CSS: Escondido por padrão */
+.envio-status-aviso {
+    display: none; 
+    
+    /* Responsividade e Estilização solicitada */
+    width: 100%; /* Largura responsiva baseada no container */
+    background-color: Gray;
+    color: Green;
+    
+    /* Tamanho de fonte fixo grande solicitado, 
+       mas controlado para não quebrar layout */
+    font-size: 40px; 
+    text-align: center;
+    padding: 1vh;
+    margin-top: 2vh;
+    border-radius: 4px;
+}
+
+/* LÓGICA VISUAL CSS: Mostra o aviso quando o botão é clicado ou focado (active) */
+.btn-primary:active + .envio-status-aviso,
+.btn-primary:focus + .envio-status-aviso {
+    display: block;
+}
+
+/* ==========================================================================
+   Responsividade Mobile-First (Media Queries para Ajustes)
+   ========================================================================== */
+
+/* Ajustes para telas desktop e tablets em paisagem */
+@media (min-width: 768px) {
+    /* Como usamos vh/vw, as mudanças são sutis */
+    .login-box {
+        /* Aumentando o padding em telas maiores */
+        padding: 2.5rem; 
+    }
+    
+    /* Se o design da universidade preferir o botão menor em desktop,
+       poderíamos alterar o width: 100% aqui. Mantive 100% para consistência fluida. */
+}
+
+/* Ajuste específico para garantir que fontes grandes não quebrem em telas muito pequenas */
+@media (max-width: 320px) {
+    :root { font-size: 13px; }
+    .envio-status-aviso { font-size: 24px; } /* Reduzindo o aviso solicitada para caber */
+}
