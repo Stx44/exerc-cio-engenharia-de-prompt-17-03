@@ -1,78 +1,43 @@
-import re
+# Sistema de Checkout Simples - Versão 1.0
 
-def validar_cpf(cpf_input: str) -> bool:
-    """
-    Realiza a validação matemática e lógica de um CPF.
-    
-    Args:
-        cpf_input (str): String contendo o CPF (com ou sem máscara).
+def processar_checkout():
+    print("--- Bem-vindo ao Sistema de Checkout ---")
+
+    try:
+        # Captura o valor bruto da compra. Usamos float conforme a restrição.
+        valor_bruto = float(input("Digite o valor total da compra: "))
         
-    Returns:
-        bool: True se o CPF for válido, False se falhar nos dígitos ou for sequência.
-        
-    Raises:
-        ValueError: Se contiver letras ou tamanho diferente de 11 dígitos numéricos.
-    """
-    # 1. Limpeza: Remove pontos e traços
-    # Substituímos tudo que não for dígito por string vazia
-    cpf_limpo = re.sub(r'\D', '', cpf_input)
+        # Captura a forma de pagamento e padroniza para letras minúsculas
+        forma_pagamento = input("Forma de pagamento (Pix, Boleto, Cartao): ").strip().lower()
 
-    # 2. Verificação de Caracteres Inválidos (Letras no meio dos números)
-    # Se a limpeza removeu algo que não era ponto/traço e sobraram letras no original
-    # ou se o input original continha letras que o regex não removeu (se usado incorretamente)
-    if any(c.isalpha() for c in cpf_input):
-        raise ValueError("Erro: O CPF não deve conter letras.")
+        # Inicialização da variável de desconto
+        percentual_desconto = 0.0
 
-    # 3. Verificação de Extensão (Falta de caracteres)
-    if len(cpf_limpo) != 11:
-        raise ValueError(f"Erro: CPF incompleto ou excessivo. Esperado 11 dígitos, recebido {len(cpf_limpo)}.")
+        # Lógica de decisão para aplicação dos descontos
+        if forma_pagamento == "pix":
+            percentual_desconto = 0.10  # 10%
+        elif forma_pagamento == "boleto":
+            percentual_desconto = 0.05  # 5%
+        elif forma_pagamento == "cartao" or forma_pagamento == "cartão":
+            percentual_desconto = 0.0   # Preço normal
+        else:
+            # Caso a forma não exista na lista permitida
+            print("Erro: Forma de pagamento inválida.")
+            return
 
-    # 4. Regra de Negócio: Bloqueio de sequências repetidas (Ex: 111.111.111-11)
-    if cpf_limpo == cpf_limpo[0] * 11:
-        return False
+        # Cálculos matemáticos utilizando o tipo primitivo Float
+        valor_desconto = valor_bruto * percentual_desconto
+        valor_final = valor_bruto - valor_desconto
 
-    # 5. Cálculo do Primeiro Dígito Verificador (D1)
-    # Pesos de 10 a 2 para os primeiros 9 dígitos
-    soma_1 = sum(int(cpf_limpo[i]) * (10 - i) for i in range(9))
-    resto_1 = (soma_1 * 10) % 11
-    d1 = resto_1 if resto_1 < 10 else 0
+        # Mensagem de Acessibilidade Garantida:
+        # Padrão: Desconto com X: Valor final | Valor sem desconto
+        print(f"\nDesconto com {forma_pagamento.capitalize()}: R$ {valor_final:.2f} | Valor sem o desconto: R$ {valor_bruto:.2f}")
+        print(f"Valor com desconto: R$ {valor_final:.2f}")
 
-    if int(cpf_limpo[9]) != d1:
-        return False
+    except ValueError:
+        # Tratamento caso o usuário digite letras no valor da compra
+        print("Erro: Por favor, insira um valor numérico válido.")
 
-    # 6. Cálculo do Segundo Dígito Verificador (D2)
-    # Pesos de 11 a 2 para os primeiros 10 dígitos (incluindo D1)
-    soma_2 = sum(int(cpf_limpo[i]) * (11 - i) for i in range(10))
-    resto_2 = (soma_2 * 10) % 11
-    d2 = resto_2 if resto_2 < 10 else 0
-
-    if int(cpf_limpo[10]) != d2:
-        return False
-
-    return True
-
-# --- Loop de Execução e Testes ---
-
+# Execução do sistema
 if __name__ == "__main__":
-    print("--- Validador de CPF Ativado ---")
-    
-    while True:
-        entrada = input("\nDigite o CPF para validar (ou 'sair'): ").strip()
-        
-        if entrada.lower() == 'sair':
-            break
-            
-        # Padrão: Lançar um loop até que o usuário forneça qualquer caracter
-        if not entrada:
-            print("Entrada vazia detectada. Por favor, digite um valor.")
-            continue
-            
-        try:
-            eh_valido = validar_cpf(entrada)
-            if eh_valido:
-                print(f"Resultado: True (CPF '{entrada}' é válido)")
-            else:
-                print(f"Resultado: False (CPF '{entrada}' é matematicamente inválido ou sequência proibida)")
-                
-        except ValueError as e:
-            print(f"Ação: {e}")
+    processar_checkout()
